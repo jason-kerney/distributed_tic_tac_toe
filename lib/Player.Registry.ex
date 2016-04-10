@@ -16,19 +16,41 @@ defmodule TTT.Player.Registry do
 
   # server side
   def init(:ok) do
-    {:ok, %{}}
+    players = %{}
+    refs = %{}
+    {:ok, {players, refs}}
   end
 
-  def handle_cast({:create, player_info}, players) do
+  def handle_cast({:create, player_info}, {players, refs}) do
     if Map.has_key?(players, player_info)  do
-      {:noreply, players}
+      {:noreply, {players, refs}}
     else
       {:ok, player} = TTT.Player.start_link()
-      {:noreply, Map.put(players, player_info, player), players}
+      ref = Process.monitor(player)
+      refs = Map.put(refs, ref, player_info)
+      players = Map.put(players, player_info, player)
+
+      {:noreply, {players, refs}}
     end
   end
 
-  def handle_call({:lookup, {name, _password} = player_info}, _from, players) do
-    {:reply, {name, Map.fetch(players, player_info)}, players}
+  def handle_call({:lookup, {name, _password} = player_info}, _from, {players, _} = state) do
+    result = Map.fetch(players, player_info)
+
+    case result do
+      {:ok, pid} -> {:reply, {name, pid}, state}
+      _ -> {:reply, result, state}
+    end
+
+  end
+
+  def handle_info({:DOWN, ref, :process, _pid, _reson}, {players, refs}) do
+    {player_info, refs} = Map.pop(refs, ref)
+    players = Map.delete(players, player_info)
+    {:noreply, {players, refs}}
+  end
+
+  def handle_info(_msg, state) do
+    {:noreply, state}
   end
 end

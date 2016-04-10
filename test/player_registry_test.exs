@@ -15,4 +15,13 @@ defmodule TTTTest.Player.Registry do
 
     assert {"name", _pid} = TTT.Player.Registry.get_player(registry_pid, {"name", "password"})
   end
+
+  test "remove a player if it stops", %{registry: registry_pid} do
+    TTT.Player.Registry.create_player(registry_pid, {"Me", "password"})
+    {"Me", pid} = TTT.Player.Registry.get_player(registry_pid, {"Me", "password"})
+
+    Agent.stop(pid)
+
+    assert :error == TTT.Player.Registry.get_player(registry_pid, {"Me", "password"})
+  end
 end
