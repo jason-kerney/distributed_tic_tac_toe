@@ -58,4 +58,14 @@ defmodule TTTTest.Game do
 
     assert expected == TTT.Game.get_state(game_pid)
   end
+
+  test "player1 cannot mark 2 spots in a row", %{game: game_pid, player1: {name1, pid1}, player2: {name2, _}} do
+    empty_row = TTT.Board.empty_row()
+    expected = {{{:X, :blank, :blank}, empty_row, empty_row}, name2, :playing}
+
+    TTT.Game.mark_spot(game_pid, pid1, :top, :left)
+    TTT.Game.mark_spot(game_pid, pid1, :top, :middle)
+
+    assert expected == TTT.Game.get_state(game_pid) 
+  end
 end
