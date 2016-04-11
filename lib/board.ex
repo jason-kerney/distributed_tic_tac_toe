@@ -23,6 +23,26 @@ defmodule TTT.Board do
     get_column(get_row(table, row), column)
   end
 
+  def mark_spot(board_pid, row, column, marker) do
+    Agent.update(board_pid, fn board -> mark(board, row, column, marker) end)
+  end
+
+  defp mark({t, m, b}, row, column, marker) do
+    case row do
+      :top -> {change_row(t, column, marker), m, b}
+      :middle -> {t, change_row(m, column, marker), b}
+      :bottom -> {t, m, change_row(b, column, marker)}
+    end
+  end
+
+  defp change_row({l, m, c}, column, marker) do
+    case column do
+      :left -> {marker, m, c}
+      :middle -> {l, marker, c}
+      :right -> {l, m, marker}
+    end
+  end
+
   def get_row({t, m, b}, row) do
     case row do
       :top -> t
