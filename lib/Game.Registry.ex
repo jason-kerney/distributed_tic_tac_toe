@@ -29,11 +29,17 @@ defmodule TTT.Game.Registry do
 
   def handle_call({:lookup, player_pid}, _from, {players, games, _refs} = state) do
     {:ok, game_pid} = Map.fetch(players, player_pid)
-    {:ok, {{name, player_pid}, player2}} = Map.fetch(games, game_pid)
-    {:reply, {game_pid, name, player2}, state}
+    {:ok, {{name1, _pid1}, player2}} = Map.fetch(games, game_pid)
+
+    player2 =
+      case player2 do
+        {name2, _pid2} -> name2
+        _ -> player2
+      end
+    {:reply, {game_pid, name1, player2}, state}
   end
 
-  def handle_cast({:create, {name, player_pid} = player}, {players, games, refs} = state) do
+  def handle_cast({:create, {_name, player_pid} = player}, {players, games, refs} = state) do
     if Map.has_key?(players, player_pid)  do
       {:noreply, state}
     else
@@ -45,7 +51,7 @@ defmodule TTT.Game.Registry do
     end
   end
 
-  def handle_cast({:update, {game_pid, {name, player_pid} = player}}, {players, games, refs} = state) do
+  def handle_cast({:update, {game_pid, {_name, player_pid} = player}}, {players, games, refs} = state) do
     if Map.has_key?(players, player_pid)  do
       {:noreply, state}
     else

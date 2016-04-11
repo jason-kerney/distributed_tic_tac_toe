@@ -22,13 +22,13 @@ defmodule TTTTest.Game.Registry do
     assert {_game_pid, ^name, :noplayer} = TTT.Game.Registry.get_game(game_registry, player)
   end
 
-  test "can add a player to an existing game", %{game_registry: game_registry, player1: {player1_name, _pid} = player1, player2: {player2_name, player_pid} = player2} do
+  test "can add a player to an existing game", %{game_registry: game_registry, player1: {player1_name, _pid} = player1, player2: {player2_name, _player_pid} = player2} do
     TTT.Game.Registry.create_game(game_registry, player1)
     {game_pid, _name, :noplayer} = TTT.Game.Registry.get_game(game_registry, player1)
 
     TTT.Game.Registry.add_player(game_registry, game_pid, player2)
 
-    assert {game_pid, player1_name, player2_name} = TTT.Game.Registry.get_game(game_registry, player1)
+    assert {^game_pid, ^player1_name, ^player2_name} = TTT.Game.Registry.get_game(game_registry, player1)
     # assert {game_pid, player1_name, player2_name} = TTT.Game.Registry.get_game(game_registry, player2)
   end
 end
