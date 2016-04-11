@@ -39,7 +39,7 @@ defmodule TTT.Game.Registry do
     if Map.has_key?(players, player_pid1) or Map.has_key?(players, player_pid2)  do
       {:noreply, state}
     else
-      {:ok, game_pid} = TTT.Game.start_link()
+      {:ok, game_pid} = TTT.Game.start_link(player1, player2)
       ref = Process.monitor(game_pid)
 
       refs = Map.put(refs, ref, game_pid)
