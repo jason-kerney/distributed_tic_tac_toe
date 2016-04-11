@@ -39,4 +39,13 @@ defmodule TTTTest.Game do
 
     assert expected == TTT.Game.get_state(game_pid)
   end
+
+  test "player2 cannot play before player1", %{game: game_pid, player1: {name1, _}, player2: {_, pid2}}  do
+    empty_board = TTT.Board.empty_table()
+    expected = {empty_board, name1, :playing}
+
+    TTT.Game.mark_spot(game_pid, pid2, :top, :left)
+
+    assert expected == TTT.Game.get_state(game_pid) 
+  end
 end

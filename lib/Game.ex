@@ -12,16 +12,17 @@ defmodule TTT.Game do
     {board, name, play_state}
   end
 
-  def get(game_pid) do
+  defp get(game_pid) do
     Agent.get(game_pid, fn state -> state end)
   end
 
   def mark_spot(game_pid, player_pid, row, column) do
-    {board_pid, {_, pid1}, player2, _, _} = get(game_pid)
+    {board_pid, {_, pid1}, {_, pid2}, _, _} = get(game_pid)
 
     marker =
       case player_pid do
         ^pid1 -> :X
+        _ -> :error
       end
 
     if marker == :error do
