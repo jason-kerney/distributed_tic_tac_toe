@@ -17,11 +17,12 @@ defmodule TTT.Game do
   end
 
   def mark_spot(game_pid, player_pid, row, column) do
-    {board_pid, {_, pid1}, {_, pid2}, _, _} = get(game_pid)
+    {board_pid, {_, pid1}, {_, pid2}, _, {_, npid}} = get(game_pid)
 
     marker =
-      case player_pid do
-        ^pid1 -> :X
+      case {player_pid, player_pid} do
+        {^pid1, ^npid} -> :X
+        {^pid2, ^npid} -> :O
         _ -> :error
       end
 
@@ -29,7 +30,17 @@ defmodule TTT.Game do
       :error
     else
       TTT.Board.mark_spot(board_pid, row, column, marker)
-      Agent.update(game_pid, fn {board_pid, player1, p2, play_state, _} -> {board_pid, player1, p2, play_state, p2} end)
+      Agent.update(game_pid,
+        fn
+          {board_pid, {_, id1} = p1, {_, id2} = p2, play_state, _} ->
+            next =
+              case player_pid do
+                ^id1 -> p2
+                ^id2 -> p1
+              end
+
+            {board_pid, p1, p2, play_state, next}
+        end)
     end
   end
 end

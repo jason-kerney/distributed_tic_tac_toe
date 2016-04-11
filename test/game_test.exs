@@ -30,7 +30,7 @@ defmodule TTTTest.Game do
     assert expected == TTT.Game.get_state(game_pid)
   end
 
-  test "player 1 can mark the board with an :X changing player2 to be the active player", %{game: game_pid, player1: {_, pid1}, player2: {name2, _}}  do
+  test "player 1 can mark the board with an :X changing player2 to be the active player", %{game: game_pid, player1: {_, pid1}, player2: {name2, _}} do
     empty_row = TTT.Board.empty_row()
     expected =
       {{{:X, :blank, :blank}, empty_row, empty_row}, name2, :playing}
@@ -40,12 +40,22 @@ defmodule TTTTest.Game do
     assert expected == TTT.Game.get_state(game_pid)
   end
 
-  test "player2 cannot play before player1", %{game: game_pid, player1: {name1, _}, player2: {_, pid2}}  do
+  test "player2 cannot play before player1", %{game: game_pid, player1: {name1, _}, player2: {_, pid2}} do
     empty_board = TTT.Board.empty_table()
     expected = {empty_board, name1, :playing}
 
     TTT.Game.mark_spot(game_pid, pid2, :top, :left)
 
-    assert expected == TTT.Game.get_state(game_pid) 
+    assert expected == TTT.Game.get_state(game_pid)
+  end
+
+  test "player2 marks a spot with an :O", %{game: game_pid, player1: {name1, pid1}, player2: {_, pid2}} do
+    empty_row = TTT.Board.empty_row()
+    expected = {{{:X, :O, :blank}, empty_row, empty_row}, name1, :playing}
+
+    TTT.Game.mark_spot(game_pid, pid1, :top, :left)
+    TTT.Game.mark_spot(game_pid, pid2, :top, :middle)
+
+    assert expected == TTT.Game.get_state(game_pid)
   end
 end
