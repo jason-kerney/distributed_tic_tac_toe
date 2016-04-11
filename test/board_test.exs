@@ -53,6 +53,10 @@ defmodule TTTTest.Board do
     assert :X == TTT.Board.get_location(TTT.Board.get_board(board_pid), :top, :left)
   end
 
+  test "cannot mark a spot with anything except an :X or an :O", %{board: board_pid} do
+    assert {:error, "Invalid marker."} == TTT.Board.mark_spot(board_pid, :top, :left, "bam")
+  end
+
   defp mark_every_spot(board_pid, marker) do
     for row <- [:top, :middle, :bottom] do
       for column <- [:left, :middle, :right] do

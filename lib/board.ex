@@ -23,8 +23,12 @@ defmodule TTT.Board do
     get_column(get_row(table, row), column)
   end
 
-  def mark_spot(board_pid, row, column, marker) do
+  def mark_spot(board_pid, row, column, marker) when marker == :X or marker == :O do
     Agent.update(board_pid, fn board -> mark(board, row, column, marker) end)
+  end
+
+  def mark_spot(_, _, _, _) do
+    {:error, "Invalid marker."}
   end
 
   defp mark({t, m, b}, row, column, marker) do
