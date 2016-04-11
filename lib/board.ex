@@ -18,4 +18,24 @@ defmodule TTT.Board do
   def get_board(board_pid) do
     Agent.get(board_pid, fn board -> board end)
   end
+
+  def get_location(table, row, column) do
+    get_column(get_row(table, row), column)
+  end
+
+  def get_row({t, m, b}, row) do
+    case row do
+      :top -> t
+      :middle -> m
+      :bottom -> b
+    end
+  end
+
+  def get_column({l, m, r}, column) do
+    case column do
+      :left -> l
+      :middle -> m
+      :right -> r
+    end
+  end
 end

@@ -15,4 +15,26 @@ defmodule TTTTest.Board do
 
     assert empty == TTT.Board.get_board(board_pid)
   end
+
+  test "I can get any location on a board" do
+    board =
+      {
+        {"top left"   , "top middle"   , "top right"   },
+        {"middle left", "middle middle", "middle right"},
+        {"bottom left", "bottom middle", "bottom right"}
+      }
+
+    assert "top left"   == TTT.Board.get_location(board, :top, :left)
+    assert "top middle" == TTT.Board.get_location(board, :top, :middle)
+    assert "top right"  == TTT.Board.get_location(board, :top, :right)
+
+    assert "middle left"   == TTT.Board.get_location(board, :middle, :left)
+    assert "middle middle" == TTT.Board.get_location(board, :middle, :middle)
+    assert "middle right"  == TTT.Board.get_location(board, :middle, :right)
+
+    assert "bottom left"   == TTT.Board.get_location(board, :bottom, :left)
+    assert "bottom middle" == TTT.Board.get_location(board, :bottom, :middle)
+    assert "bottom right"  == TTT.Board.get_location(board, :bottom, :right)
+
+  end
 end
