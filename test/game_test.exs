@@ -59,13 +59,43 @@ defmodule TTTTest.Game do
     assert expected == TTT.Game.get_state(game_pid)
   end
 
-  test "player1 cannot mark 2 spots in a row", %{game: game_pid, player1: {name1, pid1}, player2: {name2, _}} do
+  test "player1 cannot mark 2 spots in a row", %{game: game_pid, player1: {_, pid1}, player2: {name2, _}} do
     empty_row = TTT.Board.empty_row()
     expected = {{{:X, :blank, :blank}, empty_row, empty_row}, name2, :playing}
 
     TTT.Game.mark_spot(game_pid, pid1, :top, :left)
     TTT.Game.mark_spot(game_pid, pid1, :top, :middle)
 
-    assert expected == TTT.Game.get_state(game_pid) 
+    assert expected == TTT.Game.get_state(game_pid)
+  end
+
+  test "A win is :X's all in the top row", %{player1: {name1, _}} = state do
+    empty_row = TTT.Board.empty_row()
+    expected = {{{:X, :X, :X}, {:O, :O, :blank}, empty_row}, name1, :winner}
+    moves = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
+
+    result = play_game(moves, state)
+
+    assert expected == result
+  end
+
+  defp play_game(moves, %{game: game_pid, player1: p1} = state) do
+    play_game(moves, state, p1)
+    TTT.Game.get_state(game_pid)
+  end
+
+  defp play_game([{row, column}|rest], %{game: game_pid, player1: p1, player2: p2} = state, {_, cpid} = current) do
+    next =
+      case current do
+        ^p1 -> p2
+        ^p2 -> p1
+      end
+
+      TTT.Game.mark_spot(game_pid, cpid, row, column)
+      play_game(rest, state, next)
+  end
+
+  defp play_game([], _, _) do
+    :ok
   end
 end
