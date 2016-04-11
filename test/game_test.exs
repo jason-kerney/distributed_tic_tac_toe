@@ -29,4 +29,14 @@ defmodule TTTTest.Game do
 
     assert expected == TTT.Game.get_state(game_pid)
   end
+
+  test "player 1 can mark the board with an :X changing player2 to be the active player", %{game: game_pid, player1: {_, pid1}, player2: {name2, _}}  do
+    empty_row = TTT.Board.empty_row()
+    expected =
+      {{{:X, :blank, :blank}, empty_row, empty_row}, name2, :playing}
+
+    TTT.Game.mark_spot(game_pid, pid1, :top, :left)
+
+    assert expected == TTT.Game.get_state(game_pid)
+  end
 end
