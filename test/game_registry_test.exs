@@ -29,6 +29,6 @@ defmodule TTTTest.Game.Registry do
     TTT.Game.Registry.add_player(game_registry, game_pid, player2)
 
     assert {^game_pid, ^player1_name, ^player2_name} = TTT.Game.Registry.get_game(game_registry, player1)
-    # assert {game_pid, player1_name, player2_name} = TTT.Game.Registry.get_game(game_registry, player2)
+    assert {^game_pid, ^player1_name, ^player2_name} = TTT.Game.Registry.get_game(game_registry, player2)
   end
 end
