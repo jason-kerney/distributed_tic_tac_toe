@@ -35,11 +35,12 @@ defmodule TTT.Board do
     end
   end
 
-  defp change_row({l, m, c}, column, marker) do
+  defp change_row({l, m, r}, column, marker) do
     case column do
-      :left -> {marker, m, c}
-      :middle -> {l, marker, c}
-      :right -> {l, m, marker}
+      :left when l == :blank -> {marker, m, r}
+      :middle when m == :blank -> {l, marker, r}
+      :right when r == :blank -> {l, m, marker}
+      _ -> {l, m, r}
     end
   end
 

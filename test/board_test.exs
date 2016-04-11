@@ -46,6 +46,13 @@ defmodule TTTTest.Board do
     mark_every_spot(board_pid, :O)
   end
 
+  test "cannot mark a spot witn an :O when it is already marked with an :X", %{board: board_pid} do
+    TTT.Board.mark_spot(board_pid, :top, :left, :X)
+    TTT.Board.mark_spot(board_pid, :top, :left, :O)
+
+    assert :X == TTT.Board.get_location(TTT.Board.get_board(board_pid), :top, :left)
+  end
+
   defp mark_every_spot(board_pid, marker) do
     for row <- [:top, :middle, :bottom] do
       for column <- [:left, :middle, :right] do
