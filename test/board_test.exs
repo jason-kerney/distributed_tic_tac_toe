@@ -39,13 +39,21 @@ defmodule TTTTest.Board do
   end
 
   test "can mark every spot :X", %{board: board_pid} do
+    mark_every_spot(board_pid, :X)
+  end
+
+  test "can mark every spot :O", %{board: board_pid} do
+    mark_every_spot(board_pid, :O)
+  end
+
+  defp mark_every_spot(board_pid, marker) do
     for row <- [:top, :middle, :bottom] do
       for column <- [:left, :middle, :right] do
         assert :blank == TTT.Board.get_location(TTT.Board.get_board(board_pid), row, column)
 
-        TTT.Board.mark_spot(board_pid, row, column, :X)
+        TTT.Board.mark_spot(board_pid, row, column, marker)
 
-        assert :X == TTT.Board.get_location(TTT.Board.get_board(board_pid), row, column)
+        assert marker == TTT.Board.get_location(TTT.Board.get_board(board_pid), row, column)
       end
     end
   end
