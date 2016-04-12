@@ -19,28 +19,55 @@ defmodule TTT.Game do
   def mark_spot(game_pid, player_pid, row, column) do
     {board_pid, {_, pid1}, {_, pid2}, _, {_, npid}} = get(game_pid)
 
-    marker =
-      case {player_pid, player_pid} do
-        {^pid1, ^npid} -> :X
-        {^pid2, ^npid} -> :O
-        _ -> :error
-      end
+    marker = get_marker(player_pid, pid1, pid2, npid)
 
     if marker == :error do
       :error
     else
-      TTT.Board.mark_spot(board_pid, row, column, marker)
-      Agent.update(game_pid,
-        fn
-          {board_pid, {_, id1} = p1, {_, id2} = p2, play_state, _} ->
-            next =
-              case player_pid do
-                ^id1 -> p2
-                ^id2 -> p1
-              end
-
-            {board_pid, p1, p2, play_state, next}
-        end)
+      update_game(game_pid, board_pid, player_pid, row, column, marker)
     end
+  end
+
+  defp get_marker(player, p1, p2, current) do
+      case {player, player} do
+        {^p1, ^current} -> :X
+        {^p2, ^current} -> :O
+        _ -> :error
+      end
+  end
+
+  defp update_game(game_pid, board_pid, current, row, column, marker) do
+    TTT.Board.mark_spot(board_pid, row, column, marker)
+    set_next_player(game_pid, current)
+  end
+
+  defp set_next_player(game_pid, current) do
+    Agent.update(game_pid,
+      fn
+        {board_pid, {_, id1} = p1, {_, id2} = p2, _, _} ->
+          play_state = get_play_state(board_pid)
+          next =
+            case {current, play_state} do
+              {^id1, :winner} -> p1
+              {^id2, :winner} -> p2
+              {^id1, _} -> p2
+              {^id2, _} -> p1
+            end
+
+          {board_pid, p1, p2, play_state, next}
+      end)
+  end
+
+  defp get_play_state(board_pid) do
+    {t, _, _} = TTT.Board.get_board(board_pid)
+
+    cond do
+      is_winner?(t) -> :winner
+      true -> :playing
+    end
+  end
+
+  defp is_winner?({a, b, c}) do
+    a == b and b == c and a != :blank
   end
 end
