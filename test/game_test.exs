@@ -69,10 +69,19 @@ defmodule TTTTest.Game do
     assert expected == TTT.Game.get_state(game_pid)
   end
 
-  test "A win is :X's all in the top row", %{player1: {name1, _}} = state do
+  test "a win is :X's all in the top row", %{player1: {name1, _}} = state do
     empty_row = TTT.Board.empty_row()
     expected = {{{:X, :X, :X}, {:O, :O, :blank}, empty_row}, name1, :winner}
     moves = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
+
+    result = play_game(moves, state)
+
+    assert expected == result
+  end
+
+  test "a win is :O's all in the top row", %{player2: {name2, _}} = state do
+    expected = {{{:O, :O, :O}, {:X, :X, :blank}, {:blank, :blank, :X}}, name2, :winner}
+    moves = [{:bottom, :right}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
 
     result = play_game(moves, state)
 
