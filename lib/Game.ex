@@ -59,10 +59,11 @@ defmodule TTT.Game do
   end
 
   defp get_play_state(board_pid) do
-    {t, _, _} = TTT.Board.get_board(board_pid)
+    {t, m, _} = TTT.Board.get_board(board_pid)
 
     cond do
       is_winner?(t) -> :winner
+      is_winner?(m) -> :winner
       true -> :playing
     end
   end
