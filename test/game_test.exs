@@ -216,6 +216,15 @@ defmodule TTTTest.Game do
     assert expected == result
   end
 
+  test "a game with all spaces filled in is a draw", state do
+    expected = {{{:X, :X, :O}, {:O, :O, :X}, {:X, :O, :X}}, :draw}
+    moves = [{:top, :middle}, {:top, :right}, {:top, :left}, {:middle, :middle}, {:middle, :right}, {:middle, :left}, {:bottom, :right}, {:bottom, :middle}, {:bottom, :left}]
+
+    result = play_game(moves, state)
+
+    assert expected == result
+  end
+
   defp play_game(moves, %{game: game_pid, player1: p1} = state) do
     play_game(moves, state, p1)
     TTT.Game.get_state(game_pid)

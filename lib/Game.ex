@@ -7,9 +7,13 @@ defmodule TTT.Game do
 
   def get_state(game_pid) do
     {board_pid, _, _, play_state, {name, _}} = get(game_pid)
-
     board = TTT.Board.get_board(board_pid)
-    {board, name, play_state}
+
+    case play_state do
+      :draw -> {board, play_state}
+       _ -> {board, name, play_state}
+    end
+
   end
 
   defp get(game_pid) do
@@ -80,6 +84,13 @@ defmodule TTT.Game do
             { _, mm,  _},
             {bl,  _,  _}
           } when tr == mm and mm == bl and tr != :blank -> :winner
+          {
+            {a, b, c},
+            {d, e, f},
+            {g, h, i}
+          } when a != :blank and b != :blank and c != :blank and d != :blank and
+                 e != :blank and f != :blank and g != :blank and h != :blank and
+                 i != :blank -> :draw
           _ -> :playing
         end
     end
