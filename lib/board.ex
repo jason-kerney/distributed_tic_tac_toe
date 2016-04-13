@@ -63,4 +63,8 @@ defmodule TTT.Board do
       :right -> r
     end
   end
+
+  def to_colums({{tl, tm, tr}, {ml, mm, mr}, {bl, bm, br}}) do
+    {{tl, ml, bl}, {tm, mm, bm}, {tr, mr, br}}
+  end
 end

@@ -57,6 +57,31 @@ defmodule TTTTest.Board do
     assert {:error, "Invalid marker."} == TTT.Board.mark_spot(board_pid, :top, :left, "bam")
   end
 
+  test "can slice columns from a board" do
+    tl = "top left"
+    tm = "top middle"
+    tr = "top right"
+    ml = "middle left"
+    mm = "middle middle"
+    mr = "middle right"
+    bl = "bottom left"
+    bm = "bottom middle"
+    br = "bottom right"
+    board = {
+      {tl, tm, tr},
+      {ml, mm, mr},
+      {bl, bm, br}
+    }
+
+    expected = {
+      {tl, ml, bl},
+      {tm, mm, bm},
+      {tr, mr, br}
+    }
+
+    assert expected == TTT.Board.to_colums(board)
+  end
+
   defp mark_every_spot(board_pid, marker) do
     for row <- [:top, :middle, :bottom] do
       for column <- [:left, :middle, :right] do
