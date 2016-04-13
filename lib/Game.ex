@@ -68,7 +68,15 @@ defmodule TTT.Game do
       is_winner?(cl) -> :winner
       is_winner?(cm) -> :winner
       is_winner?(cr) -> :winner
-      true -> :playing
+      true ->
+        case board do
+          {
+            {tl,  _,  _},
+            { _, mm,  _},
+            { _,  _, br}
+          } when tl == mm and mm == br and tl != :blank -> :winner
+          _ -> :playing
+        end
     end
   end
 

@@ -182,7 +182,16 @@ defmodule TTTTest.Game do
 
   test "a win is all :X's diagnal top left to bottom right", %{player1: {name1, _}} = state do
     expected = {{{:X, :O, :blank}, {:O, :X, :blank}, {:blank, :blank, :X}}, name1, :winner}
-    moves = [{:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :right}, {:bottom, :middle}]
+    moves = [{:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :left}, {:bottom, :right}]
+
+    result = play_game(moves, state)
+
+    assert expected == result
+  end
+
+  test "a win is all :O's diagnal top left to bottom right", %{player2: {name2, _}} = state do
+    expected = {{{:O, :X, :X}, {:X, :O, :blank}, {:blank, :blank, :O}}, name2, :winner}
+    moves = [{:top, :right}, {:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :left}, {:bottom, :right}]
 
     result = play_game(moves, state)
 
