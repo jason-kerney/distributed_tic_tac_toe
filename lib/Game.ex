@@ -75,6 +75,11 @@ defmodule TTT.Game do
             { _, mm,  _},
             { _,  _, br}
           } when tl == mm and mm == br and tl != :blank -> :winner
+          {
+            { _,  _, tr},
+            { _, mm,  _},
+            {bl,  _,  _}
+          } when tr == mm and mm == bl and tr != :blank -> :winner
           _ -> :playing
         end
     end
