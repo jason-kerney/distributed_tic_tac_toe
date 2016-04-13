@@ -60,13 +60,14 @@ defmodule TTT.Game do
 
   defp get_play_state(board_pid) do
     {tr, mr, br} = board = TTT.Board.get_board(board_pid)
-    {cl, cm, _cr} = TTT.Board.to_colums(board)
+    {cl, cm, cr} = TTT.Board.to_colums(board)
     cond do
       is_winner?(tr) -> :winner
       is_winner?(mr) -> :winner
       is_winner?(br) -> :winner
       is_winner?(cl) -> :winner
       is_winner?(cm) -> :winner
+      is_winner?(cr) -> :winner
       true -> :playing
     end
   end
