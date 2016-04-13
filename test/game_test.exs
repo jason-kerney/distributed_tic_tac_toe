@@ -180,6 +180,15 @@ defmodule TTTTest.Game do
     assert expected == result
   end
 
+  test "a win is all :X's diagnal top left to bottom right", %{player1: {name1, _}} = state do
+    expected = {{{:X, :O, :blank}, {:O, :X, :blank}, {:blank, :blank, :X}}, name1, :winner}
+    moves = [{:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :right}, {:bottom, :middle}]
+
+    result = play_game(moves, state)
+
+    assert expected == result
+  end
+
   defp play_game(moves, %{game: game_pid, player1: p1} = state) do
     play_game(moves, state, p1)
     TTT.Game.get_state(game_pid)
