@@ -25,7 +25,7 @@ defmodule TTT.Player.Registry do
     if Map.has_key?(players, player_info)  do
       {:noreply, {players, refs}}
     else
-      {:ok, player} = TTT.Player.start_link()
+      {:ok, player} = TTT.Player.start_link(nil)
       ref = Process.monitor(player)
       refs = Map.put(refs, ref, player_info)
       players = Map.put(players, player_info, player)

@@ -1,5 +1,5 @@
 defmodule TTT.Player do
-  def start_link() do
-    Agent.start_link(fn -> %{} end)
+  def start_link(game_registry) do
+    Agent.start_link(fn -> game_registry end)
   end
 end
