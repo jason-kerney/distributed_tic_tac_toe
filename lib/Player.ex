@@ -8,6 +8,7 @@ defmodule TTT.Player do
 
     case TTT.Game.Registry.get_game(game_registry, {name, player_pid}) do
       :error -> :no_game
+      {game, _, _} -> TTT.Game.get_state(game) 
     end
   end
 
