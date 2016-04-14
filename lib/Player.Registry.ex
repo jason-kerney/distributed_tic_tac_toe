@@ -16,9 +16,17 @@ defmodule TTT.Player.Registry do
 
   # server side
   def init(:ok) do
+    game_registry = TTT.Game.Registry.start_link()
+    init_state(game_registry)
+  end
+
+  def init({:game_registry, pid}) do
+    init_state(pid)
+  end
+
+  defp init_state(game_registry) do
     players = %{}
     refs = %{}
-    game_registry = TTT.Game.Registry.start_link()
     {:ok, {game_registry, players, refs}}
   end
 
