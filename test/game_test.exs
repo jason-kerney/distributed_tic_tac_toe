@@ -16,8 +16,8 @@ defmodule TTTTest.Game do
   end
 
   test "a game can be started with a link" do
-    {:ok, player1} = TTT.Player.start_link(nil)
-    {:ok, player2} = TTT.Player.start_link(nil)
+    {:ok, player1} = TTT.Player.start_link(nil, "player1")
+    {:ok, player2} = TTT.Player.start_link(nil, "player2")
 
     assert {:ok, _pid} = TTT.Game.start_link({"player1", player1}, {"player2", player2})
   end

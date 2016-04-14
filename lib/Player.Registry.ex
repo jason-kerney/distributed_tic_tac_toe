@@ -6,6 +6,10 @@ defmodule TTT.Player.Registry do
     GenServer.start_link(__MODULE__, :ok, [])
   end
 
+  def start_link(game_registry) do
+    GenServer.start_link(__MODULE__, {:game_registry, game_registry}, [])
+  end
+
   def create_player(pid, player_info) do
     GenServer.cast(pid, {:create, player_info})
   end
@@ -30,11 +34,11 @@ defmodule TTT.Player.Registry do
     {:ok, {game_registry, players, refs}}
   end
 
-  def handle_cast({:create, player_info}, {game_registry, players, refs}) do
+  def handle_cast({:create, {name, _} = player_info}, {game_registry, players, refs}) do
     if Map.has_key?(players, player_info)  do
       {:noreply, {game_registry, players, refs}}
     else
-      {:ok, player} = TTT.Player.start_link(nil)
+      {:ok, player} = TTT.Player.start_link(game_registry, name)
       ref = Process.monitor(player)
       refs = Map.put(refs, ref, player_info)
       players = Map.put(players, player_info, player)
