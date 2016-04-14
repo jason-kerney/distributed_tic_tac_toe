@@ -29,4 +29,13 @@ defmodule TTTTest.Player do
   test "a player can is told when they do not belong to a game.", %{no_game: {_, player_pid}} do
     assert :no_game == TTT.Player.get_game_state(player_pid)
   end
+
+  test "a player can get the state of a game they belong to", %{player1: {name1, pid1}, player2: {_, pid2}} do
+    empty_board = TTT.Board.empty_table()
+    expected =
+      {empty_board, name1, :playing}
+
+    assert expected == TTT.Player.get_game_state(pid1)
+    assert expected == TTT.Player.get_game_state(pid2)
+  end
 end
