@@ -19,17 +19,21 @@ defmodule TTTTest.Player do
 
     TTT.Game.Registry.create_game(game_registry, player1, player2)
 
-    {:ok, %{game_registry: game_registry, player_registry: player_registry, player1: player1, player2: player2, no_game: player3}}
+    # {:ok, %{game_registry: game_registry, player_registry: player_registry, player1: player1, player2: player2, no_game: player3}}
+    {:ok, %{player1: player1, player2: player2, no_game: player3}}
   end
 
+  # @tag :pending
   test "can start a link with a player" do
     assert {:ok, _pid} = TTT.Player.start_link(nil, "player")
   end
 
+  # @tag :pending
   test "a player can is told when they do not belong to a game.", %{no_game: {_, player_pid}} do
     assert :no_game == TTT.Player.get_game_state(player_pid)
   end
 
+  # @tag :pending
   test "a player can get the state of a game they belong to", %{player1: {name1, pid1}, player2: {_, pid2}} do
     empty_board = TTT.Board.empty_table()
     expected =
@@ -37,5 +41,15 @@ defmodule TTTTest.Player do
 
     assert expected == TTT.Player.get_game_state(pid1)
     assert expected == TTT.Player.get_game_state(pid2)
+  end
+
+  # @tag :pending
+  test "a player can mark a spot on thier turn", %{player1: {_, pid1}, player2: {name2, _}} do
+    empty_row = TTT.Board.empty_row()
+    expected = {{{:X, :blank, :blank}, empty_row, empty_row}, name2, :playing}
+
+    TTT.Player.mark_spot(pid1, :top, :left)
+
+    assert expected == TTT.Player.get_game_state(pid1)
   end
 end
