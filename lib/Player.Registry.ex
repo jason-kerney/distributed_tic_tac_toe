@@ -18,6 +18,10 @@ defmodule TTT.Player.Registry do
     GenServer.call(pid,{:lookup, person})
   end
 
+  def stop(pid) do
+    GenServer.stop(pid) 
+  end
+
   # server side
   def init(:ok) do
     game_registry = TTT.Game.Registry.start_link()

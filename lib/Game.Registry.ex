@@ -14,6 +14,10 @@ defmodule TTT.Game.Registry do
     GenServer.call(registry_pid, {:lookup, player_pid})
   end
 
+  def stop(registry_pid) do
+    GenServer.stop(registry_pid) 
+  end
+
   #Server Level
   def init(:ok) do
     players = %{}
