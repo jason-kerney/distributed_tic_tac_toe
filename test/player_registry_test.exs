@@ -2,11 +2,12 @@ defmodule TTTTest.Player.Registry do
   use ExUnit.Case, async: true
 
   test "can create a registry" do
-    assert {:ok, _pid} = TTT.Player.Registry.start_link()
+    assert {:ok, _pid} = TTT.Player.Registry.start_link(nil)
   end
 
   setup do
-    {:ok, registry_pid} = TTT.Player.Registry.start_link()
+    {:ok, game_registry} = TTT.Game.Registry.start_link()
+    {:ok, registry_pid} = TTT.Player.Registry.start_link(game_registry)
     {:ok, registry: registry_pid}
   end
 

@@ -2,7 +2,7 @@ defmodule TTTTest.Game do
   use ExUnit.Case, async: true
 
   setup do
-    {:ok, player_registry} = TTT.Player.Registry.start_link()
+    {:ok, player_registry} = TTT.Player.Registry.start_link(nil)
     player1 = create_player(player_registry, "player1", "player1_password")
     player2 = create_player(player_registry, "player2", "KNULHkek2@*&^knehk234")
 

@@ -2,10 +2,6 @@ defmodule TTT.Player.Registry do
   use GenServer
 
   # api side
-  def start_link() do
-    GenServer.start_link(__MODULE__, :ok, [])
-  end
-
   def start_link(game_registry) do
     GenServer.start_link(__MODULE__, {:game_registry, game_registry}, [])
   end
@@ -19,7 +15,7 @@ defmodule TTT.Player.Registry do
   end
 
   def stop(pid) do
-    GenServer.stop(pid) 
+    GenServer.stop(pid)
   end
 
   # server side

@@ -3,7 +3,7 @@ defmodule TTTTest.Game.Registry do
 
   setup do
     {:ok, game_registry} = TTT.Game.Registry.start_link()
-    {:ok, player_registry} = TTT.Player.Registry.start_link()
+    {:ok, player_registry} = TTT.Player.Registry.start_link(game_registry)
     TTT.Player.Registry.create_player(player_registry, {"Player1", "Player1_Password"})
     TTT.Player.Registry.create_player(player_registry, {"Player2", "Player2_Password"})
 
