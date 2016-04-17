@@ -16,18 +16,19 @@ defmodule TTTTest.Game.Registry do
     assert {:ok, _pid} = TTT.Game.Registry.start_link()
   end
 
-  test "a game registry can create a game for a player", %{game_registry: game_registry, player1: {name1, _pid1} = player1, player2: {name2, _pid2} = player2} do
+  test "a game registry can create a game for a player", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _pid2} = player2} do
     TTT.Game.Registry.create_game(game_registry, player1, player2)
 
-    assert {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, player1)
+    assert {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
   end
 
-  test "a game that is stopped is removed from the registry", %{game_registry: game_registry, player1: player1, player2: player2} do
+  test "a game that is stopped is removed from the registry", %{game_registry: game_registry, player1: {_, pid1} = player1, player2: {_, pid2} = player2} do
     TTT.Game.Registry.create_game(game_registry, player1, player2)
-    {game_pid, _ , _} = TTT.Game.Registry.get_game(game_registry, player1)
+    {game_pid, _ , _} = TTT.Game.Registry.get_game(game_registry, pid1)
 
     Agent.stop(game_pid)
 
-    assert :error == TTT.Game.Registry.get_game(game_registry, player1)
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid1)
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid2)
   end
 end

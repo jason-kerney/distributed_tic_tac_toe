@@ -10,12 +10,12 @@ defmodule TTT.Game.Registry do
     GenServer.cast(registry_pid, {:create, {player1, player2}})
   end
 
-  def get_game(registry_pid, {_name, player_pid}) do
+  def get_game(registry_pid, player_pid) do
     GenServer.call(registry_pid, {:lookup, player_pid})
   end
 
   def stop(registry_pid) do
-    GenServer.stop(registry_pid) 
+    GenServer.stop(registry_pid)
   end
 
   #Server Level

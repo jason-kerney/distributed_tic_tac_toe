@@ -6,7 +6,7 @@ defmodule TTT.Player do
   def get_game_state(player_pid) do
     {game_registry, name} = get_state(player_pid)
 
-    case TTT.Game.Registry.get_game(game_registry, {name, player_pid}) do
+    case TTT.Game.Registry.get_game(game_registry, player_pid) do
       :error -> :no_game
       {game, _, _} -> TTT.Game.get_state(game)
     end
@@ -29,7 +29,7 @@ defmodule TTT.Player do
   defp handle_game(player_pid, success_action, fail_action) do
     {game_registry, name} = get_state(player_pid)
     player = {name, player_pid}
-    game = TTT.Game.Registry.get_game(game_registry, player)
+    game = TTT.Game.Registry.get_game(game_registry, player_pid)
 
     case game do
       :error -> fail_action.(game, player)
