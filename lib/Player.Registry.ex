@@ -59,11 +59,22 @@ defmodule TTT.Player.Registry do
 
   def handle_info({:DOWN, ref, :process, _pid, _reson}, {game_registry, players, refs}) do
     {player_info, refs} = Map.pop(refs, ref)
-    players = Map.delete(players, player_info)
+    {player_pid, players} = Map.pop(players, player_info)
+
+    end_game(game_registry, player_pid)
+
     {:noreply, {game_registry, players, refs}}
   end
 
   def handle_info(_msg, state) do
     {:noreply, state}
+  end
+
+  defp end_game(game_registry, player_pid) do
+    result = TTT.Game.Registry.get_game(game_registry, player_pid)
+    case result do
+      {game_pid, _, _} -> Agent.stop(game_pid)
+      _ -> :ok
+    end
   end
 end
