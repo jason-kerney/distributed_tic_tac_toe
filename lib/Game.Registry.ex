@@ -10,6 +10,10 @@ defmodule TTT.Game.Registry do
     GenServer.cast(registry_pid, {:create, {player1, player2}})
   end
 
+  def get_game(registry_pid, {_, player_pid}) do
+    GenServer.call(registry_pid, {:lookup, player_pid})
+  end
+
   def get_game(registry_pid, player_pid) do
     GenServer.call(registry_pid, {:lookup, player_pid})
   end
