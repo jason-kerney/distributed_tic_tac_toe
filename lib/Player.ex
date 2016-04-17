@@ -4,7 +4,7 @@ defmodule TTT.Player do
   end
 
   def get_game_state(player_pid) do
-    {game_registry, name} = get_state(player_pid)
+    {game_registry, _name} = get_state(player_pid)
 
     case TTT.Game.Registry.get_game(game_registry, player_pid) do
       :error -> :no_game
@@ -14,7 +14,7 @@ defmodule TTT.Player do
 
   def mark_spot(player_pid, row, column) do
     success_action =
-      fn ({game, _, _}, {name, pid} = player) ->
+      fn ({game, _, _}, {_name, pid}) ->
         TTT.Game.mark_spot(game, pid, row, column)
       end
 
