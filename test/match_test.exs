@@ -20,4 +20,10 @@ defmodule TTTTest.Match do
   test "can start a link to a match", %{game_registry: game_registry, player1: player1, player2: player2} do
     assert {:ok, _pid} = TTT.Match.start_link(game_registry, player1, player2)
   end
+
+  test "creating a match starts a game", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+    {:ok, _match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+
+    assert {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+  end
 end
