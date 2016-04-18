@@ -37,4 +37,12 @@ defmodule TTTTest.Game.Registry do
     assert :error == TTT.Game.Registry.get_game(game_registry, pid1)
     assert :error == TTT.Game.Registry.get_game(game_registry, pid2)
   end
+
+  test "a game registry can stop a game", %{game_registry: game_registry, player1: {_, pid1} = player1, player2: {_, pid2} = player2} do
+    TTT.Game.Registry.create_game(game_registry, player1, player2)
+
+    TTT.Game.Registry.stop_game(game_registry, pid1)
+
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid1)
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid2)  end
 end

@@ -1,6 +1,8 @@
 defmodule TTT.Game.Registry do
   use GenServer
 
+  #:erlang.pid_to_list(pid)
+
   #Client API level
   def start_link do
     GenServer.start_link(__MODULE__, :ok, [])
@@ -16,6 +18,10 @@ defmodule TTT.Game.Registry do
 
   def get_game(registry_pid, player_pid) do
     GenServer.call(registry_pid, {:lookup, player_pid})
+  end
+
+  def stop_game(registry_pid, player_pid) do
+    GenServer.call(registry_pid, {:stop_game, player_pid})
   end
 
   def stop(registry_pid) do
@@ -40,6 +46,16 @@ defmodule TTT.Game.Registry do
 
         {:reply, {game_pid, name1, name2}, state}
       _ -> {:reply, result, state}
+    end
+  end
+
+  def handle_call({:stop_game, player_pid}, _from, {players, _games, _refs} = state) do
+    if Map.has_key?(players, player_pid)  do
+      game_pid = Map.get(players, player_pid)
+      Agent.stop(game_pid)
+      {:reply, :ok, state}
+    else
+      {:reply, :ok, state}
     end
   end
 
