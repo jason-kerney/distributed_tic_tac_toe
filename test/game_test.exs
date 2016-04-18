@@ -74,7 +74,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :X, :X}, {:O, :O, :blank}, empty_row}, name1, :winner}
     moves = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -83,7 +83,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :O, :O}, {:X, :X, :blank}, {:blank, :blank, :X}}, name2, :winner}
     moves = [{:bottom, :right}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -93,7 +93,7 @@ defmodule TTTTest.Game do
     expected = {{empty_row, {:X, :X, :X}, {:O, :O, :blank}}, name1, :winner}
     moves = [{:middle, :left}, {:bottom, :left}, {:middle, :middle}, {:bottom, :middle}, {:middle, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -102,7 +102,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :blank, :blank}, {:O, :O, :O}, {:X, :X, :blank}}, name2, :winner}
     moves = [{:top, :left}, {:middle, :left}, {:bottom, :left}, {:middle, :middle}, {:bottom, :middle}, {:middle, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -112,7 +112,7 @@ defmodule TTTTest.Game do
     expected = {{empty_row, {:O, :O, :blank}, {:X, :X, :X}}, name1, :winner}
     moves = [{:bottom, :left}, {:middle, :left}, {:bottom, :middle}, {:middle, :middle}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -121,7 +121,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :blank, :blank}, {:X, :X, :blank}, {:O, :O, :O}}, name2, :winner}
     moves = [{:top, :left}, {:bottom, :left}, {:middle, :left}, {:bottom, :middle}, {:middle, :middle}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -130,7 +130,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :O, :blank}, {:X, :O, :blank}, {:X, :blank, :blank}}, name1, :winner}
     moves = [{:top, :left}, {:top, :middle}, {:middle, :left}, {:middle, :middle}, {:bottom, :left}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -139,7 +139,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :X, :X}, {:O, :X, :blank}, {:O, :blank, :blank}}, name2, :winner}
     moves = [{:top, :right}, {:top, :left}, {:top, :middle}, {:middle, :left}, {:middle, :middle}, {:bottom, :left}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -148,7 +148,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :X, :blank}, {:O, :X, :blank}, {:blank, :X, :blank}}, name1, :winner}
     moves = [{:top, :middle}, {:top, :left}, {:middle, :middle}, {:middle, :left}, {:bottom, :middle}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -157,7 +157,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :O, :X}, {:X, :O, :blank}, {:blank, :O, :blank}}, name2, :winner}
     moves = [{:top, :right}, {:top, :middle}, {:top, :left}, {:middle, :middle}, {:middle, :left}, {:bottom, :middle}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -166,7 +166,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :blank, :X}, {:O, :blank, :X}, {:blank, :blank, :X}}, name1, :winner}
     moves = [{:top, :right}, {:top, :left}, {:middle, :right}, {:middle, :left}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -175,7 +175,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :X, :O}, {:X, :blank, :O}, {:blank, :blank, :O}}, name2, :winner}
     moves = [{:top, :middle}, {:top, :right}, {:top, :left}, {:middle, :right}, {:middle, :left}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -184,7 +184,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :O, :blank}, {:O, :X, :blank}, {:blank, :blank, :X}}, name1, :winner}
     moves = [{:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :left}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -193,7 +193,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :X, :X}, {:X, :O, :blank}, {:blank, :blank, :O}}, name2, :winner}
     moves = [{:top, :right}, {:top, :left}, {:top, :middle}, {:middle, :middle}, {:middle, :left}, {:bottom, :right}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -202,7 +202,7 @@ defmodule TTTTest.Game do
     expected = {{{:O, :blank, :X}, {:blank, :X, :O}, {:X, :blank, :blank}}, name1, :winner}
     moves = [{:top, :right}, {:top, :left}, {:middle, :middle}, {:middle, :right}, {:bottom, :left}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -211,7 +211,7 @@ defmodule TTTTest.Game do
     expected = {{{:X, :X, :O}, {:blank, :O, :X}, {:O, :blank, :blank}}, name2, :winner}
     moves = [{:top, :middle}, {:top, :right}, {:top, :left}, {:middle, :middle}, {:middle, :right}, {:bottom, :left}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
   end
@@ -220,28 +220,8 @@ defmodule TTTTest.Game do
     expected = {{{:X, :X, :O}, {:O, :O, :X}, {:X, :O, :X}}, :draw}
     moves = [{:top, :middle}, {:top, :right}, {:top, :left}, {:middle, :middle}, {:middle, :right}, {:middle, :left}, {:bottom, :right}, {:bottom, :middle}, {:bottom, :left}]
 
-    result = play_game(moves, state)
+    result = TTTTest.Utils.play_game(moves, state)
 
     assert expected == result
-  end
-
-  defp play_game(moves, %{game: game_pid, player1: p1} = state) do
-    play_game(moves, state, p1)
-    TTT.Game.get_state(game_pid)
-  end
-
-  defp play_game([{row, column}|rest], %{game: game_pid, player1: p1, player2: p2} = state, {_, cpid} = current) do
-    next =
-      case current do
-        ^p1 -> p2
-        ^p2 -> p1
-      end
-
-      TTT.Game.mark_spot(game_pid, cpid, row, column)
-      play_game(rest, state, next)
-  end
-
-  defp play_game([], _, _) do
-    :ok
   end
 end
