@@ -12,7 +12,6 @@ defmodule TTT.Match do
   end
 
   def mark_win(match_pid, player_pid) do
-
     {game_registry, {_, pid1} = p1, {_, pid2} = p2} = get_state(match_pid)
 
     {game_registry, {_, p1} = player1, {_, p2} = player2} = state =

@@ -37,4 +37,15 @@ defmodule TTTTest.Match do
     {game_pid2, ^name2, ^name1} = TTT.Game.Registry.get_game(game_registry, pid1)
     assert game_pid1 != game_pid2
   end
+
+  test "When a game is won by :O a second game starts", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+    moves = [{:bottom, :left}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
+    {:ok, _match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+
+    TTTTest.Utils.play_games(moves, %{game: game_pid1, player1: player1, player2: player2}, fn _ -> nil end)
+
+    {game_pid2, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    assert game_pid1 != game_pid2
+  end
 end
