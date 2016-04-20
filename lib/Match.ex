@@ -12,12 +12,12 @@ defmodule TTT.Match do
   end
 
   def mark_win(match_pid, player_pid) do
-    {game_registry, {_, pid1} = p1, {_, pid2} = p2} = get_state(match_pid)
+    {game_registry, {_, pid1} = pl1, {_, pid2} = pl2} = get_state(match_pid)
 
-    {game_registry, {_, p1} = player1, {_, p2} = player2} = state =
+    {game_registry, {_, p1} = player1, player2} = state =
       cond do
-        player_pid == pid1 -> {game_registry, p2, p1}
-        player_pid == pid2 -> {game_registry, p1, p2}
+        player_pid == pid1 -> {game_registry, pl2, pl1}
+        player_pid == pid2 -> {game_registry, pl1, pl2}
         true -> {:error, nil, nil}
       end
 
