@@ -1,15 +1,13 @@
 defmodule TTT.Game.Registry do
   use GenServer
 
-  #:erlang.pid_to_list(pid)
-
   #Client API level
   def start_link do
     GenServer.start_link(__MODULE__, :ok, [])
   end
 
-  def create_game(registry_pid, player1, player2) do
-    GenServer.cast(registry_pid, {:create, {player1, player2}})
+  def create_game(registry_pid, player1, player2, match_pid \\ nil) do
+    GenServer.cast(registry_pid, {:create, {player1, player2, match_pid}})
   end
 
   def get_game(registry_pid, {_, player_pid}) do
@@ -59,11 +57,11 @@ defmodule TTT.Game.Registry do
     end
   end
 
-  def handle_cast({:create, {{_name1, player_pid1} = player1, {_name2, player_pid2} = player2}}, {players, games, refs} = state) do
+  def handle_cast({:create, {{_name1, player_pid1} = player1, {_name2, player_pid2} = player2, match_pid}}, {players, games, refs} = state) do
     if Map.has_key?(players, player_pid1) or Map.has_key?(players, player_pid2)  do
       {:noreply, state}
     else
-      {:ok, game_pid} = TTT.Game.start_link(player1, player2)
+      {:ok, game_pid} = TTT.Game.start_link(player1, player2, match_pid)
       ref = Process.monitor(game_pid)
 
       refs = Map.put(refs, ref, game_pid)

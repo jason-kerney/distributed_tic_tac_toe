@@ -1,12 +1,13 @@
 defmodule TTT.Game do
-  def start_link(player1, player2) do
+  def start_link(player1, player2, match_pid \\ nil) do
     {:ok, board} = TTT.Board.start_link()
 
-    Agent.start_link(fn -> {board, player1, player2, :playing, player1} end)
+    Agent.start_link(fn -> {board, player1, player2, :playing, player1, match_pid} end)
   end
 
   def get_state(game_pid) do
-    {board_pid, _, _, play_state, {name, _}} = get(game_pid)
+    {board_pid, _, _, play_state, {name, _}, _} = get(game_pid)
+
     board = TTT.Board.get_board(board_pid)
 
     case play_state do
@@ -21,14 +22,13 @@ defmodule TTT.Game do
   end
 
   def mark_spot(game_pid, player_pid, row, column) do
-    {board_pid, {_, pid1}, {_, pid2}, _, {_, npid}} = get(game_pid)
-
+    {board_pid, {_, pid1}, {_, pid2}, _, {_, npid}, match_pid} = get(game_pid)
     marker = get_marker(player_pid, pid1, pid2, npid)
 
     if marker == :error do
       :error
     else
-      update_game(game_pid, board_pid, player_pid, row, column, marker)
+      update_game(game_pid, board_pid, player_pid, row, column, marker, match_pid)
     end
   end
 
@@ -40,17 +40,17 @@ defmodule TTT.Game do
       end
   end
 
-  defp update_game(game_pid, board_pid, current, row, column, marker) do
+  defp update_game(game_pid, board_pid, current, row, column, marker, match_pid) do
     TTT.Board.mark_spot(board_pid, row, column, marker)
-    set_next_player(game_pid, current)
+    set_next_player(game_pid, current, match_pid)
   end
 
-  defp set_next_player(game_pid, current) do
-    Agent.update(game_pid,
+  defp set_next_player(game_pid, current, match_pid) do
+    result = Agent.update(game_pid,
       fn
-        {board_pid, {_, id1} = p1, {_, id2} = p2, _, _} ->
+        {board_pid, {_, id1} = p1, {_, id2} = p2, _, _, _} ->
           play_state = get_play_state(board_pid)
-          next =
+          {_, np} = next =
             case {current, play_state} do
               {^id1, :winner} -> p1
               {^id2, :winner} -> p2
@@ -58,8 +58,16 @@ defmodule TTT.Game do
               {^id2, _} -> p1
             end
 
-          {board_pid, p1, p2, play_state, next}
+          {board_pid, p1, p2, play_state, next, match_pid}
       end)
+
+    {_, _, _, play_state, {_, cpid}, mpid} = get(game_pid)
+
+    if play_state == :winner and mpid != nil do
+      TTT.Match.mark_win(mpid, cpid)
+    end
+
+    result
   end
 
   defp get_play_state(board_pid) do

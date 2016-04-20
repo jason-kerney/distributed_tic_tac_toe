@@ -1,7 +1,12 @@
 defmodule TTTTest.Utils do
-  def play_game(moves, %{game: game_pid, player1: p1} = state) do
+  def play_game(moves, state) do
+    getter = fn game_pid -> TTT.Game.get_state(game_pid) end
+    play_games(moves, state, getter)
+  end
+
+  def play_games(moves, %{game: game_pid, player1: p1} = state, getter) do
     play_game(moves, state, p1)
-    TTT.Game.get_state(game_pid)
+    getter.(game_pid)
   end
 
   def play_game([{row, column}|rest], %{game: game_pid, player1: p1, player2: p2} = state, {_, cpid} = current) do
