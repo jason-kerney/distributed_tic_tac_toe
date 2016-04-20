@@ -103,11 +103,4 @@ defmodule TTTTest.Match do
     assert :no_game == TTT.Player.get_game_state(pid1)
     assert :no_game == TTT.Player.get_game_state(pid2)
   end
-
-
-  # test "after two gams won in a row by :X, :X is marked as the winner of the match", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
-  #   moves1 = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
-  #   moves2 = [{:bottom, :left}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
-  #
-  # end
 end
