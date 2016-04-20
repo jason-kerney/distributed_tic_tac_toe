@@ -31,6 +31,10 @@ defmodule TTT.Match do
     end
   end
 
+  def get_match_state(match_pid) do
+    :playing
+  end
+
   defp get_state(match_pid) do
     Agent.get(match_pid, fn state -> state end)
   end

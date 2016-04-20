@@ -48,4 +48,15 @@ defmodule TTTTest.Match do
     {game_pid2, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
     assert game_pid1 != game_pid2
   end
+
+  test "before a game is won the game is in a state of playing", %{game_registry: game_registry, player1: player1, player2: player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    assert :playing == TTT.Match.get_match_state(match_pid)
+  end
+
+  # test "after two gams won in a row by :X, :X is marked as the winner of the match", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+  #   moves1 = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
+  #   moves2 = [{:bottom, :left}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
+  #
+  # end
 end
