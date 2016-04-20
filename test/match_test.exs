@@ -54,6 +54,57 @@ defmodule TTTTest.Match do
     assert :playing == TTT.Match.get_match_state(match_pid)
   end
 
+  test "when a match is over, with 2 wins by player1 the game state is {:winner, player1}", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid1)
+
+    {game_pid2, ^name2, ^name1} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok == TTT.Match.mark_win(match_pid, pid1)
+
+    assert {:winner, pid1} == TTT.Match.get_match_state(match_pid)
+  end
+
+  test "when a match is over, with 2 wins by player2 the game state is {:winner, player2}", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid2)
+
+    {game_pid2, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid2)
+
+    assert {:winner, pid2} == TTT.Match.get_match_state(match_pid)
+  end
+
+  test "when a match is over, with 2 wins by player1 a new game is not started", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid1)
+
+    {game_pid2, ^name2, ^name1} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid1)
+
+    assert :no_game == TTT.Player.get_game_state(pid1)
+    assert :no_game == TTT.Player.get_game_state(pid2)
+  end
+
+  test "when a match is over, with 2 wins by player2 a new game is not started", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid2)
+
+    {game_pid2, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_win(match_pid, pid2)
+
+    assert :no_game == TTT.Player.get_game_state(pid1)
+    assert :no_game == TTT.Player.get_game_state(pid2)
+  end
+
+
   # test "after two gams won in a row by :X, :X is marked as the winner of the match", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
   #   moves1 = [{:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
   #   moves2 = [{:bottom, :left}, {:top, :left}, {:middle, :left}, {:top, :middle}, {:middle, :middle}, {:top, :right}]
