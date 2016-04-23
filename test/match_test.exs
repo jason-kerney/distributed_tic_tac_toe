@@ -142,4 +142,18 @@ defmodule TTTTest.Match do
     assert game_pid1 != game_pid2
     assert {{name2, 0}, {name1, 0}} == TTT.Match.get_match_score(match_pid)
   end
+
+  test "after 3 tie games a match does not start a new game", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+
+    :ok = TTT.Match.mark_tie(match_pid, pid1, pid2)
+    {_game_pid, ^name2, ^name1} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_tie(match_pid, pid1, pid2)
+    {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+    :ok = TTT.Match.mark_tie(match_pid, pid1, pid2)
+
+
+    assert :draw == TTT.Match.get_match_state(match_pid)
+  end
 end

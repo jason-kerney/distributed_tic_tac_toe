@@ -61,9 +61,10 @@ defmodule TTT.Match do
   def get_match_state(match_pid) do
     state = get_state(match_pid)
     case state do
-      {_, {_, p1_wins}, {_, p2_wins}, _} when p1_wins < 2 and p2_wins < 2 -> :playing
+      {_, {_, p1_wins}, {_, p2_wins}, game_count} when p1_wins < 2 and p2_wins < 2 and game_count < 3 -> :playing
       {_, {{_, p1_pid}, p1_wins}, _} when p1_wins >= 2 -> {:winner, p1_pid}
       {_, _, {{_, p2_pid}, p2_wins}, _} when p2_wins >= 2 -> {:winner, p2_pid}
+      {_, _, _, game_count} when game_count >= 3 -> :draw
       _ -> :error
     end
   end
