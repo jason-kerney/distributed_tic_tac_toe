@@ -68,6 +68,11 @@ defmodule TTT.Match do
     end
   end
 
+  def get_match_score(match_pid) do
+    {_, {{p1, _}, score1}, {{p2, _}, score2}, _} = get_state(match_pid)
+    {{p1, score1}, {p2, score2}}
+  end
+
   defp get_state(match_pid) do
     Agent.get(match_pid, fn state -> state end)
   end

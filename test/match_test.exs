@@ -21,6 +21,23 @@ defmodule TTTTest.Match do
     assert {:ok, _pid} = TTT.Match.start_link(game_registry, player1, player2)
   end
 
+  test "starts with a score of both players at 0", %{game_registry: game_registry, player1: {name1, _} = player1, player2: {name2, _} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    assert {{name1, 0}, {name2, 0}} == TTT.Match.get_match_score(match_pid)
+  end
+
+  test "if player 1 is marked as winning the win is scored", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    TTT.Match.mark_win(match_pid, pid1)
+    assert {{name2, 0}, {name1, 1}} == TTT.Match.get_match_score(match_pid)
+  end
+
+  test "if player 2 is marked as winning the win is scored", %{game_registry: game_registry, player1: {name1, _} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    TTT.Match.mark_win(match_pid, pid2)
+    assert {{name1, 0}, {name2, 1}} == TTT.Match.get_match_score(match_pid)
+  end
+
   test "creating a match starts a game", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
     {:ok, _match_pid} = TTT.Match.start_link(game_registry, player1, player2)
 
@@ -104,7 +121,7 @@ defmodule TTTTest.Match do
     assert :no_game == TTT.Player.get_game_state(pid2)
   end
 
-  test "when a game if over with a tie a new game is started", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+  test "when a game is reported as over with a tie a new game is started", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
     {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
     {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
     :ok = TTT.Match.mark_tie(match_pid, pid1, pid2)
@@ -112,5 +129,17 @@ defmodule TTTTest.Match do
 
     assert :playing == TTT.Match.get_match_state(match_pid)
     assert game_pid1 != game_pid2
+  end
+
+  test "when a game is over with a tie a newgame is started", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, _} = player2} do
+    moves = [{:top, :left}, {:top, :middle}, {:top, :right}, {:middle, :middle}, {:bottom, :middle}, {:middle, :left}, {:middle, :right}, {:bottom, :right}, {:bottom, :left}]
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    {game_pid1, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+
+    TTTTest.Utils.play_games(moves, %{game: game_pid1, player1: player1, player2: player2}, fn _ -> nil end)
+
+    {game_pid2, ^name2, ^name1} = TTT.Game.Registry.get_game(game_registry, pid1)
+    assert game_pid1 != game_pid2
+    assert {{name2, 0}, {name1, 0}} == TTT.Match.get_match_score(match_pid)
   end
 end

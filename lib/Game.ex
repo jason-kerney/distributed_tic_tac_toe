@@ -50,7 +50,7 @@ defmodule TTT.Game do
       fn
         {board_pid, {_, id1} = p1, {_, id2} = p2, _, _, _} ->
           play_state = get_play_state(board_pid)
-          {_, np} = next =
+          next =
             case {current, play_state} do
               {^id1, :winner} -> p1
               {^id2, :winner} -> p2
@@ -61,10 +61,14 @@ defmodule TTT.Game do
           {board_pid, p1, p2, play_state, next, match_pid}
       end)
 
-    {_, _, _, play_state, {_, cpid}, mpid} = get(game_pid)
+    {_, {_, pid1}, {_, pid2}, play_state, {_, cpid}, mpid} = get(game_pid)
 
     if play_state == :winner and mpid != nil do
       TTT.Match.mark_win(mpid, cpid)
+    end
+
+    if play_state == :draw and mpid != nil do
+      TTT.Match.mark_tie(mpid, pid1, pid2)
     end
 
     result
