@@ -2,15 +2,14 @@
 
 ## Features Next
 
-  1. When a player stops, any Match they are in stops
-  2. When a game stops, the Match is notified.
-      1. If all the players are available then start a new game
-      2. If any players are gone the match terminates
-  3. Keep score of matches tied, won and lost
-  4. Keep score of who has played whom and how many times.
-  5. Rank players based on wins and losses.
-  6. Match players to similarly ranked players
-  7. Determine winner of tournament. 
+  * When a match stops, any game that was caused by the match stops
+  * When a player stops, any Match they are in stops
+  * Keep score of matches tied, won and lost
+    * When a player stops any score they had is removed
+  * Keep score of who has played whom and how many times.
+  * Rank players based on wins and losses.
+  * Match players to similarly ranked players
+  * Determine winner of tournament.
 
 **TODO: Add description**
 
