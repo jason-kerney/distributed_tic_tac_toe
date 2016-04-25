@@ -1,5 +1,6 @@
 defmodule TTT.Match do
   def start_link(game_registry, player1, player2) do
+    #todo: get rid of the Agent.update 
     {:ok, pid} = Agent.start_link(fn ->
       nil
     end)

@@ -44,5 +44,15 @@ defmodule TTTTest.Game.Registry do
     TTT.Game.Registry.stop_game(game_registry, pid1)
 
     assert :error == TTT.Game.Registry.get_game(game_registry, pid1)
-    assert :error == TTT.Game.Registry.get_game(game_registry, pid2)  end
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid2)
+  end
+
+  test "when a match stops any game associated with that match stops", %{game_registry: game_registry, player1: {name1, pid1} = player1, player2: {name2, pid2} = player2} do
+    {:ok, match_pid} = TTT.Match.start_link(game_registry, player1, player2)
+    {_game_pid, ^name1, ^name2} = TTT.Game.Registry.get_game(game_registry, pid1)
+
+    Agent.stop(match_pid)
+
+    assert :error == TTT.Game.Registry.get_game(game_registry, pid1)
+  end
 end
